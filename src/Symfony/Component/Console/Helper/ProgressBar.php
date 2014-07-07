@@ -349,13 +349,16 @@ class ProgressBar
     /**
      * Starts the progress output.
      *
-     * @param int    $max Maximum Step (0 if unknown)
+     * @param int    $max    Maximum Step (0 if unknown)
+     * @param string $format Optional override of format
      */
-    public function start($max = 0)
+    public function start($max = 0, $format = null)
     {
         if (0 !== $max) {
             $this->setMaxSteps($max);
         }
+
+        $this->setFormat(null !== $format ? $format : $this->determineBestFormat());
 
         if (!$this->max) {
             $this->barCharOriginal = $this->barChar;
