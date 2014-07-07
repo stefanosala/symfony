@@ -202,6 +202,8 @@ class ProgressBar
     /**
      * Gets the progress bar step width.
      *
+     * @deprecated since 2.6, it will be marked private from 3.0.
+     *
      * @return int     The progress bar step width
      */
     public function getStepWidth()
