@@ -170,9 +170,21 @@ class ProgressBar
     /**
      * Gets the progress bar step.
      *
+     * @deprecated since 2.6, to be removed in 3.0. Use {@link getCurrent()} instead.
+     *
      * @return int     The progress bar step
      */
     public function getStep()
+    {
+        return $this->getCurrent();
+    }
+
+    /**
+     * Gets the progress bar step.
+     *
+     * @return int The progress bar step
+     */
+    public function getCurrent()
     {
         return $this->step;
     }
