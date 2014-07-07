@@ -392,7 +392,7 @@ class ProgressBar
         }
 
         if ($this->max > 0 && $step > $this->max) {
-            throw new \LogicException('You can\'t advance the progress bar past the max value.');
+            $this->max = $step;
         }
 
         $prevPeriod = intval($this->step / $this->redrawFreq);
