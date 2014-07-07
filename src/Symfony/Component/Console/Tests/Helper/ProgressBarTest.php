@@ -102,6 +102,18 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDisplayWithQuietVerbosity()
+    {
+        $bar = new ProgressBar($output = $this->getOutputStream(true, StreamOutput::VERBOSITY_QUIET), 50);
+        $bar->display();
+
+        rewind($output->getStream());
+        $this->assertEquals(
+            '',
+            stream_get_contents($output->getStream())
+        );
+    }
+
     public function testFinishWithoutStart()
     {
         $bar = new ProgressBar($output = $this->getOutputStream(), 50);
@@ -435,9 +447,9 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    protected function getOutputStream($decorated = true)
+    protected function getOutputStream($decorated = true, $verbosity = StreamOutput::VERBOSITY_NORMAL)
     {
-        return new StreamOutput(fopen('php://memory', 'r+', false), StreamOutput::VERBOSITY_NORMAL, $decorated);
+        return new StreamOutput(fopen('php://memory', 'r+', false), $verbosity, $decorated);
     }
 
     protected function generateOutput($expected)
