@@ -332,9 +332,16 @@ class ProgressBar
 
     /**
      * Starts the progress output.
+     *
+     * @param int    $max Maximum Step (0 if unknown)
      */
-    public function start()
+    public function start($max = 0)
     {
+        if (0 !== $max) {
+            $this->max = $max;
+            $this->stepWidth = $this->max > 0 ? Helper::strlen($this->max) : 4;
+        }
+
         if (!$this->max) {
             $this->barCharOriginal = $this->barChar;
             $this->barChar = $this->emptyBarChar;

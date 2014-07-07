@@ -166,6 +166,23 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testStartWithMax()
+    {
+        $bar = new ProgressBar($output = $this->getOutputStream());
+        $bar->setFormat('%current%/%max% [%bar%]');
+        $bar->start(50);
+        $bar->display();
+        $bar->advance();
+
+        rewind($output->getStream());
+        $this->assertEquals(
+            $this->generateOutput(' 0/50 [>---------------------------]').
+            $this->generateOutput(' 0/50 [>---------------------------]').
+            $this->generateOutput(' 1/50 [>---------------------------]'),
+            stream_get_contents($output->getStream())
+        );
+    }
+
     public function testSetCurrentProgress()
     {
         $bar = new ProgressBar($output = $this->getOutputStream(), 50);
