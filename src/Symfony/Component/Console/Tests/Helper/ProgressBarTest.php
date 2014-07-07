@@ -302,7 +302,7 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
     public function testAddingPlaceholderFormatter()
     {
         ProgressBar::setPlaceholderFormatterDefinition('remaining_steps', function (ProgressBar $bar) {
-            return $bar->getMaxSteps() - $bar->getStep();
+            return $bar->getMaxSteps() - $bar->getCurrent();
         });
         $bar = new ProgressBar($output = $this->getOutputStream(), 3);
         $bar->setFormat(' %remaining_steps% [%bar%]');
