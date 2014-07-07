@@ -230,7 +230,7 @@ class ProgressBar
     /**
      * Gets the current progress bar percent.
      *
-     * @return int     The current progress bar percent
+     * @return float The current progress bar percent
      */
     public function getProgressPercent()
     {
