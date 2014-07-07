@@ -19,6 +19,14 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
 {
     protected $lastMessagesLength;
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInitializeWithNegativeMax()
+    {
+        $bar = new ProgressBar($output = $this->getOutputStream(), -1);
+    }
+
     public function testAdvance()
     {
         $bar = new ProgressBar($output = $this->getOutputStream());

@@ -55,6 +55,10 @@ class ProgressBar
      */
     public function __construct(OutputInterface $output, $max = 0)
     {
+        if (!is_integer($max) || $max < 0) {
+            throw new \InvalidArgumentException('Max steps should be a positive integer, 0 or null. Got "%s".', $max);
+        }
+
         // Disabling output when it does not support ANSI codes as it would result in a broken display anyway.
         $this->output = $output->isDecorated() ? $output : new NullOutput();
         $this->max = (int) $max;
