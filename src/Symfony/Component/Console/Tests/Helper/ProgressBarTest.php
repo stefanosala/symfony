@@ -90,6 +90,30 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testDisplayWithoutStart()
+    {
+        $bar = new ProgressBar($output = $this->getOutputStream(), 50);
+        $bar->display();
+
+        rewind($output->getStream());
+        $this->assertEquals(
+            $this->generateOutput('  0/50 [>---------------------------]   0%'),
+            stream_get_contents($output->getStream())
+        );
+    }
+
+    public function testFinishWithoutStart()
+    {
+        $bar = new ProgressBar($output = $this->getOutputStream(), 50);
+        $bar->finish();
+
+        rewind($output->getStream());
+        $this->assertEquals(
+            $this->generateOutput(' 50/50 [============================] 100%'),
+            stream_get_contents($output->getStream())
+        );
+    }
+
     public function testPercent()
     {
         $bar = new ProgressBar($output = $this->getOutputStream(), 50);
@@ -151,13 +175,12 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException        \LogicException
-     * @expectedExceptionMessage You must start the progress bar
      */
     public function testSetCurrentBeforeStarting()
     {
         $bar = new ProgressBar($this->getOutputStream());
         $bar->setCurrent(15);
+        $this->assertNotNull($bar->getStartTime());
     }
 
     /**

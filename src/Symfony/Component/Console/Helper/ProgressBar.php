@@ -73,6 +73,12 @@ class ProgressBar
         }
 
         $this->setFormat($this->determineBestFormat());
+
+        $this->startTime = time();
+        $this->step = 0;
+        $this->percent = 0;
+        $this->lastMessagesLength = 0;
+        $this->barCharOriginal = '';
     }
 
     /**
@@ -327,12 +333,6 @@ class ProgressBar
      */
     public function start()
     {
-        $this->startTime = time();
-        $this->step = 0;
-        $this->percent = 0;
-        $this->lastMessagesLength = 0;
-        $this->barCharOriginal = '';
-
         if (!$this->max) {
             $this->barCharOriginal = $this->barChar;
             $this->barChar = $this->emptyBarChar;
@@ -362,10 +362,6 @@ class ProgressBar
      */
     public function setCurrent($step)
     {
-        if (null === $this->startTime) {
-            throw new \LogicException('You must start the progress bar before calling setCurrent().');
-        }
-
         $step = (int) $step;
         if ($step < $this->step) {
             throw new \LogicException('You can\'t regress the progress bar.');
@@ -389,10 +385,6 @@ class ProgressBar
      */
     public function finish()
     {
-        if (null === $this->startTime) {
-            throw new \LogicException('You must start the progress bar before calling finish().');
-        }
-
         if (!$this->max) {
             $this->barChar = $this->barCharOriginal;
             $this->max = $this->step;
@@ -413,10 +405,6 @@ class ProgressBar
      */
     public function display()
     {
-        if (null === $this->startTime) {
-            throw new \LogicException('You must start the progress bar before calling display().');
-        }
-
         // these 3 variables can be removed in favor of using $this in the closure when support for PHP 5.3 will be dropped.
         $self = $this;
         $output = $this->output;
