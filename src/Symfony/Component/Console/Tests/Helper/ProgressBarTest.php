@@ -17,16 +17,6 @@ use Symfony\Component\Console\Output\StreamOutput;
 
 class ProgressBarTest extends \PHPUnit_Framework_TestCase
 {
-    protected $lastMessagesLength;
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testInitializeWithNegativeMax()
-    {
-        $bar = new ProgressBar($output = $this->getOutputStream(), -1);
-    }
-
     public function testAdvance()
     {
         $bar = new ProgressBar($output = $this->getOutputStream());
@@ -74,7 +64,7 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
     public function testAdvanceOverMax()
     {
         $bar = new ProgressBar($output = $this->getOutputStream(), 10);
-        $bar->setCurrent(9);
+        $bar->setCurrentStep(9);
         $bar->advance();
         $bar->advance();
 
@@ -205,8 +195,8 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
         $bar->start();
         $bar->display();
         $bar->advance();
-        $bar->setCurrent(15);
-        $bar->setCurrent(25);
+        $bar->setCurrentStep(15);
+        $bar->setCurrentStep(25);
 
         rewind($output->getStream());
         $this->assertEquals(
@@ -224,7 +214,7 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
     public function testSetCurrentBeforeStarting()
     {
         $bar = new ProgressBar($this->getOutputStream());
-        $bar->setCurrent(15);
+        $bar->setCurrentStep(15);
         $this->assertNotNull($bar->getStartTime());
     }
 
@@ -236,8 +226,8 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
     {
         $bar = new ProgressBar($output = $this->getOutputStream(), 50);
         $bar->start();
-        $bar->setCurrent(15);
-        $bar->setCurrent(10);
+        $bar->setCurrentStep(15);
+        $bar->setCurrentStep(10);
     }
 
     public function testRedrawFrequency()
@@ -247,7 +237,7 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
 
         $bar->setRedrawFrequency(2);
         $bar->start();
-        $bar->setCurrent(1);
+        $bar->setCurrentStep(1);
         $bar->advance(2);
         $bar->advance(2);
         $bar->advance(1);
@@ -276,7 +266,7 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
     {
         $bar = new ProgressBar($output = $this->getOutputStream(), 50);
         $bar->start();
-        $bar->setCurrent(25);
+        $bar->setCurrentStep(25);
         $bar->clear();
 
         rewind($output->getStream());
@@ -378,7 +368,7 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
     public function testAddingPlaceholderFormatter()
     {
         ProgressBar::setPlaceholderFormatterDefinition('remaining_steps', function (ProgressBar $bar) {
-            return $bar->getMaxSteps() - $bar->getCurrent();
+            return $bar->getMaxSteps() - $bar->getCurrentStep();
         });
         $bar = new ProgressBar($output = $this->getOutputStream(), 3);
         $bar->setFormat(' %remaining_steps% [%bar%]');
