@@ -23,12 +23,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ProgressBar
 {
     // options
-    private $barWidth     = 28;
-    private $barChar      = '=';
-    private $emptyBarChar = '-';
-    private $progressChar = '>';
-    private $format       = null;
-    private $redrawFreq   = 1;
+    private $barWidth       = 28;
+    private $barChar;
+    private $defaultBarChar = '=';
+    private $emptyBarChar   = '-';
+    private $progressChar   = '>';
+    private $format         = null;
+    private $redrawFreq     = 1;
 
     /**
      * @var OutputInterface
@@ -40,7 +41,6 @@ class ProgressBar
     private $stepWidth;
     private $percent = 0.0;
     private $lastMessagesLength = 0;
-    private $barCharOriginal;
     private $formatLineCount;
     private $messages;
 
@@ -62,7 +62,6 @@ class ProgressBar
         $this->setFormat($this->determineBestFormat());
 
         $this->startTime = time();
-        $this->barCharOriginal = '';
     }
 
     /**
@@ -253,6 +252,10 @@ class ProgressBar
      */
     public function getBarCharacter()
     {
+        if (null === $this->barChar) {
+            return $this->max ? $this->defaultBarChar : $this->emptyBarChar;
+        }
+
         return $this->barChar;
     }
 
@@ -336,11 +339,6 @@ class ProgressBar
             $this->setMaxSteps($max);
         }
 
-        if (!$this->max) {
-            $this->barCharOriginal = $this->barChar;
-            $this->barChar = $this->emptyBarChar;
-        }
-
         $this->display();
     }
 
@@ -388,15 +386,11 @@ class ProgressBar
      */
     public function finish()
     {
-        if ($this->max) {
-            return $this->setCurrentStep($this->max);
+        if (!$this->max) {
+            $this->max = $this->step;
         }
 
-        $this->barChar = $this->barCharOriginal;
-        $this->max = $this->step;
         $this->setCurrentStep($this->max);
-        $this->max = 0;
-        $this->barChar = $this->emptyBarChar;
     }
 
     /**

@@ -365,6 +365,28 @@ class ProgressBarTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testWithoutMax()
+    {
+        $output = $this->getOutputStream();
+
+        $bar = new ProgressBar($output);
+        $bar->start();
+        $bar->advance();
+        $bar->advance();
+        $bar->advance();
+        $bar->finish();
+
+        rewind($output->getStream());
+        $this->assertEquals(
+            rtrim($this->generateOutput('    0 [>---------------------------]')).
+            rtrim($this->generateOutput('    1 [->--------------------------]')).
+            rtrim($this->generateOutput('    2 [-->-------------------------]')).
+            rtrim($this->generateOutput('    3 [--->------------------------]')).
+            rtrim($this->generateOutput('    3 [============================]')),
+            stream_get_contents($output->getStream())
+        );
+    }
+
     public function testAddingPlaceholderFormatter()
     {
         ProgressBar::setPlaceholderFormatterDefinition('remaining_steps', function (ProgressBar $bar) {
